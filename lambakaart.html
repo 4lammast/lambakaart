@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+	<title>Lambakaart</title>
+     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+	<style>
+		@keyframes nt {
+		0% {bottom: -100px;} 75% {bottom: 0px;} 100% {bottom: -10px;}}
+		#kaart {margin: 0; height: 100vh; width: 100%; }
+		#alumine {bottom: -100px; left: 50%; right: 50%; background-image: linear-gradient(#ffffff5a, #ffffff9a);
+		border-radius: 5px; border: solid 2px #ffffffff;   transform: translate(-50%, -50%); width: 120px; position: fixed; z-index: 1000;
+		animation: nt 1s ease 0.5s forwards; padding: 5px; text-align: center; height: 40px;}
+		img:active {transform: rotate(360deg);}
+		img {transition: transform 0.25s; cursor: pointer; margin: 5px;}
+		#ikoon {z-index: 5000; position: fixed; top:0; left:0;}
+		body {margin: 0;}
+	</style>
+</head>
+<body>
+    <div id="kaart"></div>
+	<img src="lambakaart_ikoon.png" id="ikoon">
+	<div id="alumine">
+	
+	<img id="eemalda" src="lambakaart_eemalda.png" height=30 title="Eemalda marker"> 
+	<img src="info.png" title="Info" height=30 onclick="alert('Teretulemast lambakaarti! See leht on veel beeta. Tähelepanu! Kõik siin lehel olev info ei pruugi olla tõene! Koha lisamiseks kliki kohal kuhu tahad koha panna ja vajuta all olevat + nuppu ja kirjuta mis seal on. Suumimiseks saab näiteks kasutada nn pinchi. Kõik kollase markeriga märgistatud kohad on lambakaartide omad. Aluskaarti tegi OpenStreetMap, see on peamiselt õige. Kui tahad infot lambakaartides oleva koha kohta vajuta kollasele markerile. Siis tuleb popup mis näitab mis seal on. Muidugi see ei pruugi õige olla! Roheline marker on üleval nurgas on lihtsalt logo.')">
+	<img id="lisakoht" src="lisakoht.png" title="Lisa koht" height=30>
+	</div>
+	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+	 <script type="module">
+	    import { createClient } from "https://esm.sh/@supabase/supabase-js"
+		const s = createClient("https://iqrrffhjxakqvlshonbr.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlxcnJmZmhqeGFrcXZsc2hvbmJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzNTAxMzgsImV4cCI6MjA3NTkyNjEzOH0.kqOJ9Ui08Z8dXLGSE3dKXRl436_OKkqli3hbTrQAufA");
+		var latlng = null;
+	    var marker = null;
+		var sisestus = null;
+		var info2 = null;
+		var kaart = L.map("kaart", {zoomControl: false}).setView([58.35, 24.59], 7);
+		L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			maxZoom: 19,
+			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+		}).addTo(kaart);
+		var markeriikoon = L.icon({
+			iconUrl: 'lambakaart_punane.png',
+
+			iconSize:     [17, 30], // size of the icon
+			iconAnchor:   [9, 15], // point of the icon which will correspond to marker's location
+			popupAnchor:  [-9, -10] // point from which the popup should open relative to the iconAnchor
+		});
+		var kollaneikoon = L.icon({
+			iconUrl: 'lambakaart_kollane.png',
+
+			iconSize:     [17, 30], // size of the icon
+			iconAnchor:   [9, 15], // point of the icon which will correspond to marker's location
+			popupAnchor:  [-9, -10] // point from which the popup should open relative to the iconAnchor
+		});
+		kaart.on("click", async (e) => {if (marker) { marker.remove() } latlng = e.latlng; marker = L.marker([latlng.lat, latlng.lng], {icon: markeriikoon}).addTo(kaart)});
+	    document.querySelector("#eemalda").onclick = function (e) {if (marker) { marker.remove() }}
+		document.querySelector("#lisakoht").onclick = async () => {if (marker) {sisestus = prompt("Mis seal on? (lambakaart on naljade jaoks, ei pea õige olema)"); if (sisestus) {
+		info2 = await s.from("lambakaart").insert({lat: latlng.lat, lng: latlng.lng, info: sisestus}); if (info2.error) {alert("Error")} else {alert("OK"); reload()}}}}
+		const {data: info, error} = await s.from("lambakaart").select("*");
+		console.log(info);
+		var fakekohad = [];
+		if (error) {alert(error.message)} else {info.forEach(function (a) {fakekohad.push(L.marker([a.lat, a.lng], {icon: kollaneikoon})); fakekohad[fakekohad.length - 1].addTo(kaart); fakekohad[fakekohad.length - 1].bindPopup(a.info);})}
+	 </script>
+</body>
+</html>
