@@ -12,7 +12,7 @@
 		0% {bottom: -100px;} 75% {bottom: 0px;} 100% {bottom: -10px;}}
 		#kaart {margin: 0; height: 100vh; width: 100%; }
 		#alumine {bottom: -100px; left: 50%; right: 50%; background-image: linear-gradient(#ffffff5a, #ffffff9a);
-		border-radius: 5px; border: solid 2px #ffffffff;   transform: translate(-50%, -50%); width: 120px; position: fixed; z-index: 1000;
+		border-radius: 5px; border: solid 2px #ffffffff;   transform: translate(-50%, -50%); width: 180px; position: fixed; z-index: 1000;
 		animation: nt 1s ease 0.5s forwards; padding: 5px; text-align: center; height: 40px;}
 		img:active {transform: rotate(360deg);}
 		img {transition: transform 0.25s; cursor: pointer; margin: 5px;}
@@ -24,10 +24,11 @@
     <div id="kaart"></div>
 	<img src="lambakaart_ikoon.png" id="ikoon">
 	<div id="alumine">
-	
+	<img src="lambakaart_ikoon.png" alt="Lambakaart" onclick="alert('Teretulemast Lambakaarti. Infoks vajutage sinist i tähega nuppu.')" height=30>
 	<img id="eemalda" src="lambakaart_eemalda.png" height=30 title="Eemalda marker"> 
 	<img src="info.png" title="Info" height=30 onclick="alert('Teretulemast lambakaarti! See leht on veel beeta. Tähelepanu! Kõik siin lehel olev info ei pruugi olla tõene! Koha lisamiseks kliki kohal kuhu tahad koha panna ja vajuta all olevat + nuppu ja kirjuta mis seal on. Suumimiseks saab näiteks kasutada nn pinchi. Kõik kollase markeriga märgistatud kohad on lambakaartide omad. Aluskaarti tegi OpenStreetMap, see on peamiselt õige. Kui tahad infot lambakaartides oleva koha kohta vajuta kollasele markerile. Siis tuleb popup mis näitab mis seal on. Muidugi see ei pruugi õige olla! Roheline marker on üleval nurgas on lihtsalt logo.')">
 	<img id="lisakoht" src="lisakoht.png" title="Lisa koht" height=30>
+	<a href="/" alt="4lammast lehele"><img src="/favicon.ico" height=30></a>
 	</div>
 	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
