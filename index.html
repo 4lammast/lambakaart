@@ -61,7 +61,7 @@
 		kaart.on("click", async (e) => {if (marker) { marker.remove() } latlng = e.latlng; marker = L.marker([latlng.lat, latlng.lng], {icon: markeriikoon}).addTo(kaart)});
 	    document.querySelector("#eemalda").onclick = function (e) {if (marker) { marker.remove() }}
 		document.querySelector("#lisakoht").onclick = async () => {if (marker) {sisestus = prompt("Mis seal on? (lambakaart on naljade jaoks, ei pea õige olema)"); if (sisestus) {
-		info2 = await s.from("lambakaart").insert({lat: latlng.lat, lng: latlng.lng, info: sisestus}); if (info2.error) {alert("Error")} else {alert("OK"); reload()}}}}
+		info2 = await s.from("lambakaart").insert({lat: latlng.lat, lng: latlng.lng, info: sisestus}); if (info2.error) {alert("Error")} else {alert("OK"); location.reload()}}}}
 		const {data: info, error} = await s.from("lambakaart").select("*");
 		console.log(info);
 		var fakekohad = [];
